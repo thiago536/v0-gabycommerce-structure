@@ -1,6 +1,6 @@
 "use client"
 
-import { ShoppingBag, Heart, UserIcon, Search, Menu, LogOut } from "lucide-react"
+import { ShoppingBag, Heart, UserIcon, Search, Menu, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,9 +19,15 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import type { User as SupabaseUser } from "@supabase/supabase-js"
 
+interface Profile {
+  role?: string
+  is_admin?: boolean
+}
+
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
   const { getTotalItems, loadCart } = useCart()
   const { items: favoriteItems, loadFavorites } = useFavorites()
   const router = useRouter()
@@ -29,19 +35,43 @@ export function Header() {
   useEffect(() => {
     const supabase = createClient()
 
-    // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    // Get initial user and profile
+    const getInitialData = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
       setUser(user)
-    })
+
+      if (user) {
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("role, is_admin")
+          .eq("id", user.id)
+          .single()
+        setProfile(profileData)
+      }
+    }
+
+    getInitialData()
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
+
       if (session?.user) {
         loadCart()
         loadFavorites()
+
+        const { data: profileData } = await supabase
+          .from("profiles")
+          .select("role, is_admin")
+          .eq("id", session.user.id)
+          .single()
+        setProfile(profileData)
+      } else {
+        setProfile(null)
       }
     })
 
@@ -56,6 +86,8 @@ export function Header() {
     router.push("/")
     router.refresh()
   }
+
+  const isAdmin = profile?.role === "admin" || profile?.is_admin === true
 
   return (
     <header className="bg-background/95 backdrop-blur-sm border-b border-border sticky top-0 z-50">
@@ -124,6 +156,17 @@ export function Header() {
                   <DropdownMenuItem asChild>
                     <Link href="/perfil">Meu Perfil</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/admin" className="text-orange-600 font-medium">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Administração
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -174,6 +217,15 @@ export function Header() {
               >
                 Acessórios
               </Link>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="text-orange-600 hover:text-orange-700 transition-colors py-2 font-medium"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Administração
+                </Link>
+              )}
             </div>
           </div>
         )}

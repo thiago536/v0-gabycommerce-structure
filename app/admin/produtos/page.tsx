@@ -46,7 +46,7 @@ export default async function AdminProductsPage() {
               <p className="text-muted-foreground">Gerencie seus produtos</p>
             </div>
             <Button asChild>
-              <Link href="/admin/produtos/novo">
+              <Link href="/admin/produtos/adicionar">
                 <Plus className="mr-2 h-4 w-4" />
                 Novo Produto
               </Link>

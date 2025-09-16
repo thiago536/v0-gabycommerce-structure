@@ -1,30 +1,80 @@
-# E-commerce system structure
+# GabySummer E-commerce
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+Sistema de e-commerce completo para moda praia, fitness e acessórios, desenvolvido com Next.js e Supabase.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/thiago-s-projects-d1375641/v0-e-commerce-system-structure)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/8QssTTRk26e)
+## 🏖️ Características
 
-## Overview
+- **Tema Praia**: Design elegante com paleta laranja e branco
+- **Fundos Dinâmicos**: Backgrounds que mudam por categoria
+- **Carrinho e Favoritos**: Sistema completo de compras
+- **Checkout WhatsApp**: Finalização via WhatsApp
+- **Painel Admin**: Gerenciamento completo de produtos
+- **Autenticação**: Sistema seguro com Supabase Auth
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+## 🚀 Como Usar
 
-## Deployment
+### 1. Configurar o Banco de Dados
+Execute os scripts SQL na ordem:
+1. `scripts/001_initial_schema.sql`
+2. `scripts/002_seed_data.sql`
+3. `scripts/003_profile_trigger.sql`
+4. `scripts/004_admin_policies.sql`
+5. `scripts/005_create_admin_user.sql`
+6. `scripts/006_create_storage_bucket.sql`
 
-Your project is live at:
+### 2. Criar Conta de Administrador
 
-**[https://vercel.com/thiago-s-projects-d1375641/v0-e-commerce-system-structure](https://vercel.com/thiago-s-projects-d1375641/v0-e-commerce-system-structure)**
+**Opção 1: Via Interface Web**
+1. Acesse `/admin/acesso`
+2. Digite o email de um usuário já cadastrado
+3. Clique em "Criar Administrador"
 
-## Build your app
+**Opção 2: Via SQL**
+\`\`\`sql
+UPDATE profiles 
+SET role = 'admin' 
+WHERE email = 'seu-email@exemplo.com';
+\`\`\`
 
-Continue building your app on:
+### 3. Acessar o Admin
+1. Faça login normalmente no site
+2. Acesse `/admin` ou use o menu do usuário
+3. Gerencie produtos, pedidos e categorias
 
-**[https://v0.app/chat/projects/8QssTTRk26e](https://v0.app/chat/projects/8QssTTRk26e)**
+## 📱 Funcionalidades
 
-## How It Works
+### Para Clientes
+- Catálogo de produtos por categoria
+- Carrinho de compras persistente
+- Lista de favoritos
+- Checkout via WhatsApp
+- Sistema de cupons
+- Perfil do usuário
 
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+### Para Administradores
+- Dashboard com métricas
+- Gerenciamento de produtos (CRUD)
+- Upload de múltiplas imagens
+- Gerenciamento de pedidos
+- Controle de estoque
+- Sistema de cupons
+
+## 🛠️ Tecnologias
+
+- **Frontend**: Next.js 14, React, TypeScript
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **Estilização**: Tailwind CSS v4
+- **Componentes**: shadcn/ui
+- **Estado**: Zustand
+- **Notificações**: Sonner
+
+## 🎨 Design System
+
+- **Cores Primárias**: Laranja (#ff8c00) e Branco
+- **Tipografia**: Geist Sans e Geist Mono
+- **Tema**: Praia chique e elegante
+- **Responsivo**: Mobile-first design
+
+## 📞 Suporte
+
+Para dúvidas ou problemas, acesse a documentação ou entre em contato através do WhatsApp integrado no sistema.

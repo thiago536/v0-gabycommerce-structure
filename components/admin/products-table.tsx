@@ -104,7 +104,7 @@ export function ProductsTable({ products }: ProductsTableProps) {
                       </Link>
                     </Button>
                     <Button variant="ghost" size="icon" asChild>
-                      <Link href={`/admin/produtos/${product.id}/editar`}>
+                      <Link href={`/admin/produtos/editar/${product.id}`}>
                         <Edit className="h-4 w-4" />
                       </Link>
                     </Button>
